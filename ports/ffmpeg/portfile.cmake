@@ -526,6 +526,8 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libmfx")
 endif()
 
+if ("vcpkgmiss" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libvo-amrwbenc")
 endif()
 
 set(OPTIONS_CROSS "--enable-cross-compile")

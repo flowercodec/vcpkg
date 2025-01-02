@@ -696,6 +696,13 @@
         "libxml2"
       ]
     },
+    "vcpkgmiss": {
+      "description": "vcpkg_miss support",
+      "dependencies": [
+        "libopencore",
+        "libvo-amrwbenc"
+      ]
+    },
     "zlib": {
       "description": "zlib support",
       "dependencies": [

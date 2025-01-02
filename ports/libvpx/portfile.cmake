@@ -199,7 +199,7 @@ else()
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
             set(OPTIONS "${OPTIONS} --enable-thumb --disable-neon")
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-            set(OPTIONS "${OPTIONS} --enable-thumb")
+            set(OPTIONS "${OPTIONS} --enable-thumb --disable-neon")
         endif()
         # Set environment variables for configure
         set(ENV{AS} ${VCPKG_DETECTED_CMAKE_C_COMPILER})

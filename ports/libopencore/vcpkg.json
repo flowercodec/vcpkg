@@ -1,0 +1,12 @@
+{
+  "name": "libopencore",
+  "version": "0.1.6",
+  "description": "libopencore encoder",
+  "supports": "!xbox",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}

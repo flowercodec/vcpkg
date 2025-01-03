@@ -527,7 +527,7 @@ else()
 endif()
 
 if ("vcpkgmiss" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libvo-amrwbenc")
+    set(OPTIONS "${OPTIONS} --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libvo-amrwbenc --enable-libxvid")
 endif()
 
 set(OPTIONS_CROSS "--enable-cross-compile")

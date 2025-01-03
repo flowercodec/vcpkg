@@ -1,3 +1,5 @@
+#不支持编译，用VS手动编译后，复制到 vcpkg_installed目录
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://downloads.xvid.com/downloads/xvidcore-1.3.7.zip"
     FILENAME xvidcore-1.3.7.zip
@@ -5,12 +7,16 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_extract_source_archive(
-    SOURCE_PATH
+    SOURCE_PATH_RAW
     ARCHIVE "${ARCHIVE}"
 )
 
+set(SOURCE_PATH ${SOURCE_PATH_RAW}/build/generic)
+
 vcpkg_make_configure(
-    SOURCE_PATH "${SOURCE_PATH}/build/generic"
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        "CFLAGS=\$CFLAGS -I${SOURCE_PATH_RAW}/src"
     OPTIONS_RELEASE
         --enable-strip
     OPTIONS_DEBUG
@@ -18,9 +24,12 @@ vcpkg_make_configure(
 )
 
 vcpkg_make_install(
-    MAKEFILE "${SOURCE_PATH}/build/generic/Makefile"
+    MAKEFILE "${SOURCE_PATH}/Makefile"
+    OPTIONS
+        "-C ${SOURCE_PATH}"
+    OPTIONS_DEBUG
+        --enable-debug
 )
-
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()

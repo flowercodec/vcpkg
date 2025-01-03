@@ -80,6 +80,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if("highbitdepth" IN_LIST FEATURES)
         set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
     endif()
+    
+    # asm指令优化后崩溃，所以禁掉neon
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+        set(OPTIONS "${OPTIONS} --enable-thumb --disable-neon")
+    endif()
 
     message(STATUS "Generating makefile")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tmp")
@@ -199,7 +204,7 @@ else()
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
             set(OPTIONS "${OPTIONS} --enable-thumb --disable-neon")
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-            set(OPTIONS "${OPTIONS} --enable-thumb --disable-neon")
+            set(OPTIONS "${OPTIONS} --enable-thumb")
         endif()
         # Set environment variables for configure
         set(ENV{AS} ${VCPKG_DETECTED_CMAKE_C_COMPILER})

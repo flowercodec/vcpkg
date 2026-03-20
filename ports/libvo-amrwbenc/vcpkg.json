@@ -1,0 +1,12 @@
+{
+  "name": "libvo-amrwbenc",
+  "version": "0.1.6",
+  "description": "libvo-amrwbenc encoder",
+  "supports": "!xbox",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}

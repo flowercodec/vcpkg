@@ -149,6 +149,11 @@ else()
         set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
     endif()
 
+    # asm指令优化后崩溃，所以禁掉neon
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+        set(OPTIONS "${OPTIONS} --enable-thumb --disable-neon")
+    endif()
+
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
         set(LIBVPX_TARGET_ARCH "x86")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)

@@ -740,6 +740,13 @@
       "dependencies": [
         "zeromq"
       ]
+    },
+    "vcpkgmiss": {
+      "description": "vcpkg_miss support",
+      "dependencies": [
+        "libopencore",
+        "libvo-amrwbenc"
+      ]
     }
   }
 }

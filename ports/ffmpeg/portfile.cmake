@@ -1,9 +1,10 @@
+set(VCPKG_USE_HEAD_VERSION ON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO ffmpeg/ffmpeg
+    REPO flowercodec/ffmpeg
     REF "n${VERSION}"
-    SHA512 f31769a7ed52865165e7db4a03e9378b3376012b7aaf0bbc022aa76c3e999e71c3927e6eb8639d8681e04e33362dd73eafa9e7c62a3c71599ff78da09f5cee0a
-    HEAD_REF master
+    SHA512 1dee3967057619dd7f2f78c63de85bb97af16c974bd9225c2336d42c7c8765c04f77490aac36af2daf953bc52c7faa37750a09265e133708f6a1709028573834
+    HEAD_REF release/8.1
     PATCHES
         0001-create-lib-libraries.patch
         0002-fix-msvc-link.patch
@@ -20,6 +21,12 @@ vcpkg_from_github(
         0046-fix-msvc-detection.patch
 )
 
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/ffbuild_common.mak"
+    "${SOURCE_PATH}/ffbuild/common.mak"
+    COPYONLY
+)
+
 if(SOURCE_PATH MATCHES " ")
     message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
 endif()
@@ -32,7 +39,7 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQU
     vcpkg_add_to_path("${NASM_EXE_PATH}")
 endif()
 
-set(OPTIONS "--enable-pic --disable-doc --enable-runtime-cpudetect --disable-autodetect")
+set(OPTIONS "--enable-pic --disable-doc --enable-runtime-cpudetect --disable-autodetect --disable-filter=gfxcapture")
 
 if(VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -363,6 +370,11 @@ endif()
 if("mp3lame" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libmp3lame")
     set(WITH_MP3LAME ON)
+
+    # 仅在 Windows 平台 + 静态库 时追加 libmpghip-static.lib
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        set(OPTIONS "${OPTIONS} \"--extra-libs=libmpghip-static.lib\"")
+    endif()   
 else()
     set(OPTIONS "${OPTIONS} --disable-libmp3lame")
     set(WITH_MP3LAME OFF)
@@ -386,6 +398,10 @@ endif()
 if("opencl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-opencl")
     set(WITH_OPENCL ON)
+
+    if(VCPKG_TARGET_IS_WINDOWS)
+        set(OPTIONS "${OPTIONS} --extra-libs=Advapi32.lib --extra-libs=Ole32.lib --extra-libs=Cfgmgr32.lib")
+    endif()    
 else()
     set(OPTIONS "${OPTIONS} --disable-opencl")
     set(WITH_OPENCL OFF)
@@ -598,6 +614,10 @@ if("rubberband" IN_LIST FEATURES)
 else()
     set(OPTIONS "${OPTIONS} --disable-librubberband")
     set(WITH_RUBBERBAND OFF)
+endif()
+
+if ("vcpkgmiss" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libvo-amrwbenc --enable-libxvid")
 endif()
 
 set(OPTIONS_CROSS "--enable-cross-compile")
